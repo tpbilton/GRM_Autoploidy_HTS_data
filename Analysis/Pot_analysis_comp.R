@@ -6,6 +6,7 @@
 ## For this script, the following files are required:
 ## - Supplementary_File3.csv
 ## - Supplementary_file4.tab.ra
+## - Supplementary_File5.csv
 ## - Supplementary_file6.tab.ra
 
 ########################
@@ -38,7 +39,7 @@ library(GUSrelate)
 ## Load the data in R
 ra <- readRA("Supplementary_file4.tab.ra")
 
-# Note: Supplementary_file5.ra.tab.gz is in RA format. 
+# Note: Supplementary_file4.ra.tab.gz is in RA format. 
 #       This format has format [reference]/[alternate] instead of a genotype.
 #       E.g., 5/3 means that there are 5 reads for the reference allele and 3 reads for the alternate allele                                                     
 
@@ -100,7 +101,7 @@ colnames(grm_vr_gbs_high) = colnames(grm_vr_gbs_low) = colnames(agh_low) = colna
 rownames(grm_vr_gbs_high) = rownames(grm_vr_gbs_low) = rownames(agh_low) = rownames(agh_high) = rownames(cer_low) = rownames(cer_high) =  grm_pot$.__enclos_env__$private$GRM$VR_low$indID
 
 ## Read in the list matching IDs
-ID_list = read.csv("Supplementary_File6.csv")
+ID_list = read.csv("Supplementary_File5.csv")
 ID_list_ord = ID_list[match(substr(colnames(grm_vr_gbs_high),1,9), ID_list[,2]),]
 
 ## match genotype GRM with GBS GRMs
@@ -127,6 +128,7 @@ df_rr <- rbind(data.frame(meth="CHIP", item=1:noff, y=offdiag(grm_vr_ord)),
 df_rr$meth = factor(df_rr$meth, levels=c("CHIP","GUS (High)","AGH (High)","Cer (High)","GUS (Low)","AGH (Low)","Cer (Low)"))
 plot(Meth(df_rr), diff.range = 1.25)
 mina = 0.01
+maxa = 0.13
 dista = (1-mina*2)/length(methods)
 xset = 1/4*dista
 xset2 = 1/5*dista
@@ -208,11 +210,12 @@ offdiag = function(x) x[upper.tri(x)]
 df_rr <- rbind(data.frame(meth="CHIP", item=1:noff, y=offdiag(grm_vr_ord)),
                data.frame(meth="GUS (High)", item=1:noff, y=offdiag(grm_vr_gbs_high)),
                data.frame(meth="GUS (Low)", item=1:noff, y=offdiag(grm_vr_gbs_low)),
-               data.frame(meth="GUS_noHWE\n(High)", item=1:ndiag, y=offdiag(grm_vr_gbs_high_noHWE)),
-               data.frame(meth="GUS_noHWE\n(Low)", item=1:ndiag, y=offdiag(grm_vr_gbs_low_noHWE)))
-df_rr$meth = factor(df_rr$meth, levels=c("CHIP","GUS (High)","GUS(Low)","GUS_noHWE\n(High)","GUS_noHWE\n(Low)"))
+               data.frame(meth="GUS_noHWE\n(High)", item=1:noff, y=offdiag(grm_vr_gbs_high_noHWE)),
+               data.frame(meth="GUS_noHWE\n(Low)", item=1:noff, y=offdiag(grm_vr_gbs_low_noHWE)))
+df_rr$meth = factor(df_rr$meth, levels=c("CHIP","GUS (High)","GUS (Low)","GUS_noHWE\n(High)","GUS_noHWE\n(Low)"))
 plot(Meth(df_rr), diff.range = 1.25)
 mina = 0.01
+maxa = 0.13
 dista = (1-mina*2)/length(methods)
 xset = 1/4*dista
 xset2 = 1/5*dista
